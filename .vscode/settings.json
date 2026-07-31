@@ -1,0 +1,7 @@
+{
+    "chat.tools.terminal.autoApprove": {
+        "npx ts-node": true,
+        "playwright-cli": true,
+        "%{": true
+    }
+}

@@ -1,0 +1,8 @@
+{
+    "browser": {
+        "browserName": "chromium"
+    },
+    "outputDir": ".playwright-cli",
+    "outputMode": "file",
+    "codegen": "typescript"
+}

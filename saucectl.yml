@@ -1,0 +1,273 @@
+apiVersion: v1alpha
+kind: playwright
+
+nodeVersion: v22
+
+sauce:
+  region: us-west-1
+  # Parallel execution: run up to 3 suites/shards at the same time.
+  # Keep this >= the number of spec files you want running concurrently.
+  concurrency: 10
+  # Groups all jobs from one run under a single build in the Sauce dashboard,
+  # so you can see pass/fail for every test together.
+  metadata:
+    build: PWAF-$TEST_ENV-$BUILD_TAG
+    tags:
+      - pwaf
+      - tas
+      - $TEST_ENV
+  # Make the job results page, video, and logs viewable.
+  visibility: public
+  # Retry a failed suite once (helps with transient cloud/network flakiness).
+  retries: 1
+
+# Credentials are sourced from environment variables:
+# SAUCE_USERNAME / SAUCE_ACCESS_KEY
+
+rootDir: ./
+
+env:
+  TEST_ENV: $TEST_ENV
+  BASE_URL: $BASE_URL
+  APP_USERNAME: $APP_USERNAME
+  APP_PASSWORD: $APP_PASSWORD
+  # Opt-in Sauce Visual. Forwarded from the local shell ($VISUAL) so snapshots are
+  # captured on the VM. SAUCE_USERNAME/SAUCE_ACCESS_KEY are passed (as references, not
+  # literals) so the Visual SDK in global-setup can authenticate and create the build.
+  VISUAL: $VISUAL
+  SAUCE_USERNAME: $SAUCE_USERNAME
+  SAUCE_ACCESS_KEY: $SAUCE_ACCESS_KEY
+
+playwright:
+  version: package.json
+  configFile: playwright.config.ts
+
+# Extra npm packages the Sauce VM runner must install (it does NOT auto-install
+# devDependencies). The Sauce Visual SDK is imported by global-setup/teardown, so
+# it must be present on the VM for the visual build to be created.
+npm:
+  dependencies:
+    - "@saucelabs/visual-playwright"
+
+suites:
+  - name: "case-search - User can search TAS case ID from user home and open case view in a new tab @P1 @Regres - $TEST_ENV"
+    platformName: Windows 11
+    screenResolution: 1440x900
+    testMatch:
+      - case-search\.spec\.ts$
+    params:
+      browserName: chrome
+      project: desktop-chrome
+      headless: false
+      grep: 'User can search TAS case ID from user home and open case view in a new tab @P1 @Regression'
+
+  - name: "create-case - Corporate-Dealer create-case flow follows user-type assignment branch and submits succ - $TEST_ENV"
+    platformName: Windows 11
+    screenResolution: 1440x900
+    testMatch:
+      - create-case\.spec\.ts$
+    params:
+      browserName: chrome
+      project: desktop-chrome
+      headless: false
+      grep: 'Corporate/Dealer create-case flow follows user-type assignment branch and submits successfully'
+
+  - name: "filter-case-by-status - User filters My Created cases by status and verifies the case in the new tab - $TEST_ENV"
+    platformName: Windows 11
+    screenResolution: 1440x900
+    testMatch:
+      - filter-case-by-status\.spec\.ts$
+    params:
+      browserName: chrome
+      project: desktop-chrome
+      headless: false
+      grep: 'User filters My Created cases by status and verifies the case in the new tab @P1 @Regression'
+
+  - name: "ftr-case-view-verification - Created FTR case shows all submitted information in the case view @P1 @ - $TEST_ENV"
+    platformName: Windows 11
+    screenResolution: 1440x900
+    testMatch:
+      - ftr-case-view-verification\.spec\.ts$
+    params:
+      browserName: chrome
+      project: desktop-chrome
+      headless: false
+      grep: 'Created FTR case shows all submitted information in the case view @P1 @Regression'
+
+  - name: "ftr-create-draft - User validates VIN, opens Create Draft FTR, fills Repair Information, and saves d - $TEST_ENV"
+    platformName: Windows 11
+    screenResolution: 1440x900
+    testMatch:
+      - ftr-create-draft\.spec\.ts$
+    params:
+      browserName: chrome
+      project: desktop-chrome
+      headless: false
+      grep: 'User validates VIN, opens Create Draft FTR, fills Repair Information, and saves draft @P1 @Regression'
+
+  - name: "ftr-create-submit - User validates VIN, completes all FTR sections, submits, and a report number is  - $TEST_ENV"
+    platformName: Windows 11
+    screenResolution: 1440x900
+    testMatch:
+      - ftr-create-submit\.spec\.ts$
+    params:
+      browserName: chrome
+      project: desktop-chrome
+      headless: false
+      grep: 'User validates VIN, completes all FTR sections, submits, and a report number is generated @P1 @Regression'
+
+  - name: "ftr-vin-validation - User logs in to FTR, opens Create Field Technical Report, validates a VIN, and  - $TEST_ENV"
+    platformName: Windows 11
+    screenResolution: 1440x900
+    testMatch:
+      - ftr-vin-validation\.spec\.ts$
+    params:
+      browserName: chrome
+      project: desktop-chrome
+      headless: false
+      grep: 'User logs in to FTR, opens Create Field Technical Report, validates a VIN, and sees vehicle information @P0 @Smoke'
+
+  - name: "pqr - Non-CQS user creates and submits a Single VIN PQR successfully @P1 @Regression - $TEST_ENV"
+    platformName: Windows 11
+    screenResolution: 1440x900
+    testMatch:
+      - pqr\.spec\.ts$
+    params:
+      browserName: chrome
+      project: desktop-chrome
+      headless: false
+      grep: 'Non-CQS user creates and submits a Single VIN PQR successfully @P1 @Regression'
+
+  - name: "pqr - Invalid VIN is rejected and PQR routing is prevented @P1 @Regression - $TEST_ENV"
+    platformName: Windows 11
+    screenResolution: 1440x900
+    testMatch:
+      - pqr\.spec\.ts$
+    params:
+      browserName: chrome
+      project: desktop-chrome
+      headless: false
+      grep: 'Invalid VIN is rejected and PQR routing is prevented @P1 @Regression'
+
+  - name: "pqr - Non-CQS user creates and submits a Multi-VIN PQR successfully @P1 @Regression - $TEST_ENV"
+    platformName: Windows 11
+    screenResolution: 1440x900
+    testMatch:
+      - pqr\.spec\.ts$
+    params:
+      browserName: chrome
+      project: desktop-chrome
+      headless: false
+      grep: 'Non-CQS user creates and submits a Multi-VIN PQR successfully @P1 @Regression'
+
+  - name: "pqr - Multi-VIN without a primary VIN cannot create a draft PQR @P1 @Regression - $TEST_ENV"
+    platformName: Windows 11
+    screenResolution: 1440x900
+    testMatch:
+      - pqr\.spec\.ts$
+    params:
+      browserName: chrome
+      project: desktop-chrome
+      headless: false
+      grep: 'Multi-VIN without a primary VIN cannot create a draft PQR @P1 @Regression'
+
+  - name: "pqr - Single VIN PQR without a primary Part and DTC is blocked on submit @P2 @Regression @Negative - $TEST_ENV"
+    platformName: Windows 11
+    screenResolution: 1440x900
+    testMatch:
+      - pqr\.spec\.ts$
+    params:
+      browserName: chrome
+      project: desktop-chrome
+      headless: false
+      grep: 'Single VIN PQR without a primary Part and DTC is blocked on submit @P2 @Regression @Negative'
+
+  - name: "pqr - TCI Port user creates and submits a Multi-VIN PQR successfully (No Auto-Assign) @P1 @Regressio - $TEST_ENV"
+    platformName: Windows 11
+    screenResolution: 1440x900
+    testMatch:
+      - pqr\.spec\.ts$
+    params:
+      browserName: chrome
+      project: desktop-chrome
+      headless: false
+      grep: 'TCI Port user creates and submits a Multi-VIN PQR successfully \(No Auto-Assign\) @P1 @Regression @TCI'
+
+  - name: "pqr - TCI Port Multi-VIN without a primary VIN cannot create a draft PQR @P1 @Regression @TCI @Negat - $TEST_ENV"
+    platformName: Windows 11
+    screenResolution: 1440x900
+    testMatch:
+      - pqr\.spec\.ts$
+    params:
+      browserName: chrome
+      project: desktop-chrome
+      headless: false
+      grep: 'TCI Port Multi-VIN without a primary VIN cannot create a draft PQR @P1 @Regression @TCI @Negative'
+
+  - name: "precall-worksheet - User logs in, opens TAS from the hamburger menu, and lands on the Pre-Call Works - $TEST_ENV"
+    platformName: Windows 11
+    screenResolution: 1440x900
+    testMatch:
+      - precall-worksheet\.spec\.ts$
+    params:
+      browserName: chrome
+      project: desktop-chrome
+      headless: false
+      grep: 'User logs in, opens TAS from the hamburger menu, and lands on the Pre-Call Worksheet page @P0 @Smoke'
+
+  - name: "update-case-status-save-submit - User filters Pending T2 Review case, updates status to Pending Deal - $TEST_ENV"
+    platformName: Windows 11
+    screenResolution: 1440x900
+    testMatch:
+      - update-case-status-save-submit\.spec\.ts$
+    params:
+      browserName: chrome
+      project: desktop-chrome
+      headless: false
+      grep: 'User filters Pending T2 Review case, updates status to Pending Dealer Response, and Save & Submit exits case-view @P1 @Regression'
+
+  - name: "verify-case-creator - User opens their first created case and verifies the Creator name @P1 @Regress - $TEST_ENV"
+    platformName: Windows 11
+    screenResolution: 1440x900
+    testMatch:
+      - verify-case-creator\.spec\.ts$
+    params:
+      browserName: chrome
+      project: desktop-chrome
+      headless: false
+      grep: 'User opens their first created case and verifies the Creator name @P1 @Regression'
+
+  - name: "watch-case - User adds a filtered case to the watch list and verifies the confirmation and Unwatch s - $TEST_ENV"
+    platformName: Windows 11
+    screenResolution: 1440x900
+    testMatch:
+      - watch-case\.spec\.ts$
+    params:
+      browserName: chrome
+      project: desktop-chrome
+      headless: false
+      grep: 'User adds a filtered case to the watch list and verifies the confirmation and Unwatch state @P1 @Regression'
+
+reporters:
+  # Prints a console summary of failed/interesting jobs after the run.
+  spotlight:
+    enabled: true
+  # Combine every job's results into ONE JUnit file locally. This is the source
+  # the post-run aggregator (scripts/aggregate-debug-report.mjs) reads to build a
+  # single ai-debug-report/DEBUG_REPORT.md covering ALL tests from the Sauce run.
+  junit:
+    enabled: true
+    filename: saucectl-report.xml
+  # Combined machine-readable summary of all jobs (handy for CI dashboards).
+  json:
+    enabled: true
+    filename: saucectl-report.json
+
+artifacts:
+  # Clear the previous download folder before fetching new artifacts.
+  cleanup: true
+  download:
+    when: always
+    match:
+      - "*"
+    directory: ./test-results/sauce

@@ -1,0 +1,37 @@
+node_modules/
+dist/
+test-results/
+playwright-report/
+tta-report/
+.auth/
+*.env.local
+.DS_Store
+Thumbs.db
+.playwright-cli/
+
+# Reuse index — local capabilities store, never commit
+.ai-memory/
+
+# Security — environment files with real credentials (NEVER commit).
+# Only the .env.example template is tracked.
+.env
+.env.*
+!.env.example
+
+# Logs and Reports
+log/
+tta-report/
+playwright-report/
+test-results/
+
+# Temp files
+*.log
+*.txt
+*.png
+*.jpeg
+*.jpg
+scratch/
+ai-debug-report/
+
+# Live recovery mailbox — runtime only, never commit
+.recovery/

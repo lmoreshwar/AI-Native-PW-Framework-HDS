@@ -1,0 +1,20 @@
+# node_modules must NOT be ignored: saucectl bundles the packages declared under
+# `npm.dependencies` in saucectl.yml (e.g. @saucelabs/visual-playwright) from it.
+playwright-report/
+test-results/
+ai-debug-report/
+.git/
+.github/
+FRAMEWORK_HUB/
+README.md
+AGENT.md
+COMPLETION_CHECKLIST.md
+*.log
+
+# Presentation assets are not needed for test runs and Office lock files
+# (e.g. ~$*.pptx) can break archiving when the file is open.
+presentation/
+scripts/
+*.pptx
+*.ppt
+~$*

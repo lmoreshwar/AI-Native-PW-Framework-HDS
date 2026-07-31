@@ -1,0 +1,249 @@
+{
+  "corporateUsers": [
+    {
+      "userType": "Corporate User",
+      "dealerCode": "CORP001",
+      "creatorName": "Ryan Stites"
+    }
+  ],
+  "dealerUsers": [
+    {
+      "userType": "Dealer User",
+      "dealerCode": "DEALER001"
+    },
+    {
+      "userType": "Dealer User",
+      "dealerCode": "04739"
+    }
+  ],
+  "vins": [
+    {
+      "vin": "58AD11D19MU001187",
+      "year": 2021,
+      "model": "ES 250",
+      "modelYear": "2021 Lexus ES 250",
+      "status": "valid"
+    },
+    {
+      "vin": "4T1BF1AK5CU123456",
+      "year": 2012,
+      "model": "Camry",
+      "modelYear": "2012 Toyota Camry",
+      "status": "valid"
+    },
+    {
+      "vin": "INVALIDVIN123",
+      "status": "invalid"
+    }
+  ],
+  "tasCaseIds": [
+    {
+      "caseId": "TA241500045",
+      "dealerCode": "60901",
+      "dealerName": "LEXUS OF TAMPA BAY",
+      "model": "ES 350",
+      "year": 2008,
+      "status": "Pending Closure"
+    }
+  ],
+  "caseTypes": [
+    {
+      "id": "technical",
+      "name": "Technical",
+      "description": "Technical assistance case"
+    },
+    {
+      "id": "documentation_only",
+      "name": "Documentation Only",
+      "description": "Documentation only case"
+    },
+    {
+      "id": "collision_center",
+      "name": "Collision Center",
+      "description": "Collision center case"
+    },
+    {
+      "id": "parts_release",
+      "name": "Parts Release",
+      "description": "Parts release case"
+    }
+  ],
+  "categories": [
+    "Powertrain",
+    "Electrical",
+    "Chassis",
+    "Body",
+    "Hybrid",
+    "ADAS",
+    "Telematics"
+  ],
+  "customerTypes": [
+    "Fleet Manager",
+    "Individual",
+    "Dealer",
+    "Service Manager"
+  ],
+  "dealerVisits": [
+    "1",
+    "2",
+    "3",
+    "4+",
+    "Unknown"
+  ],
+  "languages": [
+    "English",
+    "Spanish",
+    "French"
+    ],
+  "communicationMethods": [
+    "Phone",
+    "Email",
+    "In-Person",
+    "Video Call"
+  ],
+  "mileageUnits": [
+    "Miles",
+    "Kilometers"
+  ],
+  "urls": {
+    "baseUrl": "https://app.example.com",
+    "loginUrl": "/",
+    "homeUrl": "/user-home",
+    "tasUrl": "/tas",
+    "casesUrl": "/tas/case-management",
+    "createCaseUrl": "/tas/case-setup"
+  },
+  "timeouts": {
+    "pageLoad": 15000,
+    "elementWait": 10000,
+    "actionTimeout": 5000
+  },
+  "DPR": {
+    "landingUrl": "https://app.example.com/generic-page-25-12?pageId=EDERGP202516522"
+  },
+  "FTR": {
+    "landingUrl": "https://app.example.com/generic-page-25-12?pageId=EDERGP202531210",
+    "vin": "58AD11D19MU001187",
+    "expectedVehicle": {
+      "division": "LEXUS",
+      "model": "ES 250",
+      "modelYear": "2021",
+      "vin": "58AD11D19MU001187"
+    },
+    "caseType": "FTR",
+    "expectedCaseProperties": {
+      "productionDate": "Sep 14, 2020",
+      "vehiclePlant": "TMMK 3",
+      "enginePlant": "00000",
+      "smsCode": "00000",
+      "engineType": "A25A-FKS",
+      "transmissionType": "00000"
+    },
+    "repairInformation": {
+      "title": "Auto Draft FTR - Repair Information",
+      "radioSelections": [
+        {
+          "groupLabel": "Unit Of Distance",
+          "option": "Miles"
+        },
+        {
+          "groupLabel": "Is this a Dealer Installed (DIO) or Port Installed (PPO) Accessory Issue?",
+          "option": "No"
+        },
+        {
+          "groupLabel": "Was this found during PDS",
+          "option": "No"
+        }
+      ],
+      "randomDropdownLabels": [
+        "Problem Area",
+        "Service Category",
+        "Section",
+        "Sub Component",
+        "Condition"
+      ]
+    },
+    "dtcInformation": {
+      "dtcCode": "B1234"
+    },
+    "partNumberInformation": {
+      "partNumber": "7283050R30P1",
+      "serialDate": "1",
+      "quantity": "1"
+    }
+  },
+  "PQR": {
+    "landingUrl": "https://app.example.com/generic-page-25-12?pageId=EDERGP202611206",
+    "vin": "JTJBC1BAXD2442870",
+    "expectedVehicle": {
+      "division": "LEXUS",
+      "model": "RX 450H",
+      "modelYear": "2013",
+      "vin": "JTJBC1BAXD2442870"
+    },
+    "repairInformation": {
+      "title": "Auto PQR - Single VIN Submit",
+      "odometer": "12345",
+      "sourceLocationLabel": "Source Location",
+      "pqrType": "Base Vehicle",
+      "randomDropdownLabels": [
+        "Service Category",
+        "Section",
+        "Sub Component",
+        "Condition"
+      ]
+    },
+    "invalidVin": "1NXBR32E85Z000000",
+    "multiVin": {
+      "primaryVin": "3TMCZ5AN8KM258602",
+      "secondVin": "JTJBC1BAXD2442870",
+      "expectedVehicle": {
+        "division": "TOYOTA",
+        "model": "Tacoma",
+        "modelYear": "2019",
+        "vin": "3TMCZ5AN8KM258602"
+      }
+    },
+    "dtcInformation": {
+      "dtcCode": "B1234"
+    },
+    "partNumberInformation": {
+      "partNumber": "7283050R30P1",
+      "serialDate": "1",
+      "quantity": "1"
+    },
+    "attachment": "Attachment.png",
+    "repairDetails": {
+      "conditionDescription": "Condition description entered by automation for PQR submit.",
+      "diagnosticSteps": "Diagnostic steps entered by automation for PQR submit.",
+      "observation": "Observation entered by automation for PQR submit.",
+      "repairProcess": "Repair process entered by automation for PQR submit."
+    }
+  },
+  "createCaseFlow": {
+    "assign": {
+      "dealerSearchText": "61602",
+      "dealerOptionText": "LEXUS OF LEXINGTON (61602)"
+    },
+    "generalInformation": {
+      "repairOrderPrefix": "ROAUTO",
+      "odometer": "12345",
+      "directContact": "333-222-1111",
+      "customerType": "Aftermarket Shop/Auction"
+    },
+    "caseDetails": {
+      "customerConcern": "Customer reports intermittent warning light and reduced performance while driving.",
+      "serviceGroup": "Powertrain",
+      "serviceCategory": "Engine/Hybrid System",
+      "section": "Engine Control",
+      "subComponent": "Driveability",
+      "condition": "MIL/Warning Light ON",
+      "preCallWorksheet": "Mil-ON"
+    },
+    "diagnosticInformation": {
+      "description": "Performed health check, verified warning light condition, scanned for DTCs, and confirmed repeatability under load.",
+      "dtcCodes": ["P0420", "P0171", "P0300"]
+    }
+  },
+  "environment": "uat"
+}

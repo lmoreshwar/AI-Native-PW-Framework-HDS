@@ -1,0 +1,139 @@
+name: Playwright Tests
+
+on:
+  # Manual trigger with options
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to test against'
+        required: true
+        default: 'qa'
+        type: choice
+        options:
+          - qa
+          - uat
+          - dev
+      run_on_sauce:
+        description: 'Execute on Sauce Labs cloud'
+        required: true
+        default: 'true'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
+      test_grep:
+        description: 'Test tag filter (e.g., @Smoke, @P0, @Regression)'
+        required: false
+        default: ''
+        type: string
+      browser:
+        description: 'Browser project'
+        required: false
+        default: 'desktop-chrome'
+        type: choice
+        options:
+          - desktop-chrome
+          - desktop-firefox
+          - desktop-safari
+          - desktop-edge
+          - mobile-chrome
+          - all
+
+  # Also run on push to main
+  push:
+    branches: [main]
+
+  # Also run on PRs
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+        if: ${{ github.event.inputs.run_on_sauce != 'true' }}
+
+      # ─── Credentials: from GitHub repository secrets ─────────────────
+      # Configure these in your repo: Settings → Secrets and variables → Actions.
+      - name: Set credentials from repository secrets
+        run: |
+          echo "BASE_URL=${{ secrets.BASE_URL }}" >> $GITHUB_ENV
+          echo "APP_USERNAME=${{ secrets.APP_USERNAME }}" >> $GITHUB_ENV
+          echo "APP_PASSWORD=${{ secrets.APP_PASSWORD }}" >> $GITHUB_ENV
+          echo "SAUCE_USERNAME=${{ secrets.SAUCE_USERNAME }}" >> $GITHUB_ENV
+          echo "SAUCE_ACCESS_KEY=${{ secrets.SAUCE_ACCESS_KEY }}" >> $GITHUB_ENV
+
+      # ─── Set environment variables ───────────────────────────────────
+      - name: Set test environment
+        run: |
+          echo "TEST_ENV=${{ github.event.inputs.environment || 'qa' }}" >> $GITHUB_ENV
+          echo "RUN_ON_SAUCE=${{ github.event.inputs.run_on_sauce || 'true' }}" >> $GITHUB_ENV
+
+      # ─── Run on Sauce Labs (cloud) ──────────────────────────────────
+      - name: Install saucectl
+        if: ${{ env.RUN_ON_SAUCE == 'true' }}
+        run: npm install -g saucectl
+
+      - name: Run tests on Sauce Labs
+        if: ${{ env.RUN_ON_SAUCE == 'true' }}
+        run: saucectl run
+        env:
+          SAUCE_USERNAME: ${{ env.SAUCE_USERNAME }}
+          SAUCE_ACCESS_KEY: ${{ env.SAUCE_ACCESS_KEY }}
+          BASE_URL: ${{ env.BASE_URL }}
+          APP_USERNAME: ${{ env.APP_USERNAME }}
+          APP_PASSWORD: ${{ env.APP_PASSWORD }}
+          TEST_ENV: ${{ env.TEST_ENV }}
+
+      # ─── Run locally (GitHub-hosted runner) ─────────────────────────
+      - name: Run tests locally
+        if: ${{ env.RUN_ON_SAUCE != 'true' }}
+        run: |
+          ARGS=""
+          if [ -n "${{ github.event.inputs.test_grep }}" ]; then
+            ARGS="$ARGS --grep '${{ github.event.inputs.test_grep }}'"
+          fi
+          if [ "${{ github.event.inputs.browser }}" != "all" ] && [ -n "${{ github.event.inputs.browser }}" ]; then
+            ARGS="$ARGS --project=${{ github.event.inputs.browser }}"
+          fi
+          npx playwright test $ARGS --reporter=list,json,html
+        env:
+          BASE_URL: ${{ env.BASE_URL }}
+          APP_USERNAME: ${{ env.APP_USERNAME }}
+          APP_PASSWORD: ${{ env.APP_PASSWORD }}
+          TEST_ENV: ${{ env.TEST_ENV }}
+
+      # ─── Upload results ─────────────────────────────────────────────
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-results-${{ github.event.inputs.environment || 'qa' }}
+          path: |
+            test-results/
+            playwright-report/
+          retention-days: 14
+
+      - name: Upload Sauce Labs results
+        uses: actions/upload-artifact@v4
+        if: ${{ env.RUN_ON_SAUCE == 'true' && always() }}
+        with:
+          name: sauce-results-${{ github.event.inputs.environment || 'qa' }}
+          path: test-results/sauce/
+          retention-days: 14
